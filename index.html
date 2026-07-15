@@ -1,0 +1,3597 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+  Сыни және аналитикалық ойлау — 2-нұсқа
+</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --primary-light: #dbeafe;
+
+  --background: #f3f6fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #667085;
+  --border: #d7deea;
+
+  --correct: #15803d;
+  --correct-background: #dcfce7;
+
+  --wrong: #b91c1c;
+  --wrong-background: #fee2e2;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+header {
+  padding: 34px 16px 58px;
+  background:
+    linear-gradient(
+      135deg,
+      #1d4ed8,
+      #3b82f6
+    );
+  color: white;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0 0 10px;
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+header p {
+  margin: 0;
+  font-size: 17px;
+  opacity: 0.95;
+}
+
+.container {
+  width: min(
+    960px,
+    calc(100% - 24px)
+  );
+  margin: -32px auto 55px;
+}
+  .section-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  background: white;
+  border-radius: 17px;
+  box-shadow:
+    0 5px 20px
+    rgba(31, 41, 55, 0.09);
+}
+
+.section-button {
+  border: 2px solid var(--border);
+  border-radius: 13px;
+  padding: 16px 12px;
+  background: #f8fafc;
+  color: #344054;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.section-button.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+.section-button.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.test-section {
+  display: none;
+}
+
+.test-section.active {
+  display: block;
+}
+
+.section-header {
+  padding: 22px;
+  margin-bottom: 15px;
+  background: white;
+  border-radius: 17px;
+  box-shadow:
+    0 5px 20px
+    rgba(31, 41, 55, 0.08);
+}
+
+.section-header h2 {
+  margin: 0 0 7px;
+  color: var(--primary);
+  font-size: 28px;
+}
+
+.section-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.section-information {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.information-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.progress-card {
+  padding: 16px 18px;
+  margin-bottom: 15px;
+  background: white;
+  border-radius: 15px;
+  box-shadow:
+    0 4px 18px
+    rgba(31, 41, 55, 0.07);
+}
+
+.progress-information {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+  color: var(--muted);
+}
+
+.progress-information strong {
+  color: var(--primary);
+}
+
+.progress-line {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dce4f0;
+}
+
+.progress-line span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.25s;
+}
+  .question {
+  padding: 21px;
+  margin-bottom: 15px;
+  background: var(--card);
+  border: 1px solid #dce3ee;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 17px
+    rgba(31, 41, 55, 0.06);
+}
+
+.question-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 35px;
+  margin-bottom: 12px;
+  padding: 0 11px;
+  border-radius: 10px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-weight: 900;
+}
+
+.question-title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.math {
+  font-family:
+    "Times New Roman",
+    Georgia,
+    serif;
+  font-size: 22px;
+}
+
+.visual-box {
+  margin: 5px 0 18px;
+  padding: 14px;
+  overflow-x: auto;
+  border: 1px solid #dce3ee;
+  border-radius: 14px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.visual-box svg {
+  display: block;
+  width: min(100%, 620px);
+  height: auto;
+  margin: 0 auto;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 5px 0 18px;
+  overflow: hidden;
+  border: 1.5px solid #475569;
+  border-radius: 8px;
+}
+
+.comparison-cell {
+  min-height: 110px;
+  padding: 14px;
+  font-family:
+    "Times New Roman",
+    Georgia,
+    serif;
+  font-size: 19px;
+}
+
+.comparison-cell + .comparison-cell {
+  border-left: 1.5px solid #475569;
+}
+
+.comparison-title {
+  display: block;
+  margin-bottom: 9px;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+  font-weight: 900;
+}
+
+.options {
+  display: grid;
+  gap: 9px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: 0.18s;
+}
+
+.option:hover {
+  border-color: #93b4f6;
+  background: #f8fbff;
+}
+
+.option input {
+  flex: 0 0 auto;
+  margin-top: 4px;
+  transform: scale(1.15);
+  accent-color: var(--primary);
+}
+
+.option-letter {
+  flex: 0 0 27px;
+  color: #475467;
+  font-weight: 900;
+}
+  .option.correct {
+  border-color: #22c55e;
+  background: var(--correct-background);
+  color: #166534;
+}
+
+.option.wrong {
+  border-color: #ef4444;
+  background: var(--wrong-background);
+  color: #991b1b;
+}
+
+.explanation {
+  display: none;
+  margin-top: 17px;
+  padding-top: 16px;
+  border-top: 1px solid #e4e7ec;
+}
+
+.question.checked .explanation {
+  display: block;
+}
+
+.question-score {
+  margin-bottom: 12px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-weight: 900;
+}
+
+.question-score.full {
+  background: var(--correct-background);
+  color: #166534;
+}
+
+.question-score.zero {
+  background: var(--wrong-background);
+  color: #991b1b;
+}
+
+.correct-answer {
+  padding: 12px 14px;
+  border-radius: 11px;
+  background: var(--correct-background);
+  color: #166534;
+  font-weight: 800;
+}
+
+.explanation-title {
+  margin: 14px 0 7px;
+  color: var(--primary-dark);
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.explanation-text {
+  margin: 0;
+  padding: 13px 14px;
+  border-radius: 11px;
+  background: #f7faff;
+}
+
+.solution-steps {
+  margin: 0;
+  padding-left: 24px;
+}
+
+.solution-steps li {
+  margin-bottom: 9px;
+}
+
+.solution-steps li:last-child {
+  margin-bottom: 0;
+}
+
+.solution-formula {
+  display: block;
+  margin-top: 5px;
+  font-family:
+    "Times New Roman",
+    Georgia,
+    serif;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.key-fact {
+  margin-top: 11px;
+  padding: 12px 14px;
+  border-left: 5px solid var(--primary);
+  border-radius: 8px;
+  background: var(--primary-light);
+  font-weight: 750;
+}
+  .result-card{
+display:none;
+margin:20px 0;
+padding:24px;
+border-radius:18px;
+background:white;
+text-align:center;
+box-shadow:0 5px 18px rgba(31,41,55,.08);
+}
+
+.result-card.show{
+display:block;
+}
+
+.result-card h3{
+margin:0 0 12px;
+color:var(--primary);
+font-size:28px;
+}
+
+.score{
+font-size:42px;
+font-weight:900;
+color:var(--primary-dark);
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:14px;
+justify-content:center;
+margin:28px 0 50px;
+}
+
+button{
+border:none;
+cursor:pointer;
+border-radius:14px;
+padding:16px 28px;
+font-size:17px;
+font-weight:800;
+transition:.2s;
+}
+
+.show-result-button{
+background:var(--primary);
+color:#fff;
+}
+
+.show-result-button:hover{
+background:var(--primary-dark);
+}
+
+.reset-button{
+background:#eef4ff;
+color:var(--primary-dark);
+}
+
+.reset-button:hover{
+background:#dbeafe;
+}
+
+@media(max-width:768px){
+
+.question{
+padding:18px;
+}
+
+.question-title{
+font-size:18px;
+}
+
+.comparison-grid{
+grid-template-columns:1fr;
+}
+
+.comparison-cell+.comparison-cell{
+border-left:none;
+border-top:1.5px solid #475569;
+}
+
+.score{
+font-size:34px;
+}
+
+header h1{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>
+Сыни және аналитикалық ойлау
+</h1>
+
+<p>
+2-нұсқа • 30 сұрақ
+</p>
+
+</header>
+
+<div class="container">
+
+<div class="section-navigation">
+
+<button
+id="criticalTab"
+class="section-button active"
+type="button"
+>
+Сыни ойлау
+</button>
+
+<button
+id="analyticalTab"
+class="section-button locked"
+type="button"
+disabled
+>
+Аналитикалық ойлау
+</button>
+
+</div>
+  {
+number:1,
+
+question:"A және Б шамаларын салыстырыңыз.",
+
+visual:`
+<div class="comparison-grid">
+
+  <div class="comparison-cell">
+    <span class="comparison-title">
+      A шамасы
+    </span>
+
+    <div class="math">
+      5 санының 20%
+    </div>
+  </div>
+
+  <div class="comparison-cell">
+    <span class="comparison-title">
+      Б шамасы
+    </span>
+
+    <div class="math">
+      2
+    </div>
+  </div>
+
+</div>
+`,
+
+options:[
+"Екі шама тең",
+"Б шамасы үлкен",
+"Шамаларды салыстыру үшін ақпарат жеткіліксіз",
+"А шамасы үлкен"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+А шамасын есептейміз:
+<span class="solution-formula">
+5 · 20 / 100 = 1
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Б шамасы есептің шартында берілген:
+<span class="solution-formula">
+Б = 2
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Екі шаманы салыстырамыз:
+<span class="solution-formula">
+1 &lt; 2
+</span>
+</li>
+
+<li>
+<b>Қорытынды:</b>
+Б шамасы үлкен.
+</li>
+
+</ol>
+`,
+
+keyFact:"А = 1, Б = 2. Сондықтан Б шамасы үлкен."
+},
+
+{
+number:2,
+
+question:"Теңсіздікті шешіңіз:",
+
+visual:`
+<div class="visual-box math">
+(y + 1)(y² − y + 1) ≥ −26
+</div>
+`,
+
+options:[
+"[−3; +∞)",
+"(−3; 3)",
+"(−∞; −3) ∪ (3; +∞)",
+"(−∞; −3] ∪ [3; +∞)",
+"(−3; 3]"
+],
+
+correct:0,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Қысқаша көбейту формуласын қолданамыз:
+<span class="solution-formula">
+(a + b)(a² − ab + b²) = a³ + b³
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Берілген көбейтіндіні ықшамдаймыз:
+<span class="solution-formula">
+(y + 1)(y² − y + 1) = y³ + 1
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Теңсіздік:
+<span class="solution-formula">
+y³ + 1 ≥ −26
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+<span class="solution-formula">
+y³ ≥ −27
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+Кубтық функция өспелі болғандықтан:
+<span class="solution-formula">
+y ≥ −3
+</span>
+</li>
+
+<li>
+<b>Жауабы:</b>
+[−3; +∞).
+</li>
+
+</ol>
+`,
+
+keyFact:"Теңсіздіктің шешімі: [−3; +∞)."
+},
+
+{
+number:3,
+
+question:"32 − 7y өрнегінің мәні 11 санына тең болатындай y-тің мәнін табыңыз.",
+
+options:[
+"5",
+"3",
+"2",
+"4",
+"1"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Өрнекті 11-ге теңестіреміз:
+<span class="solution-formula">
+32 − 7y = 11
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+32 санын оң жаққа өткіземіз:
+<span class="solution-formula">
+−7y = 11 − 32
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+<span class="solution-formula">
+−7y = −21
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Екі жағын −7-ге бөлеміз:
+<span class="solution-formula">
+y = 3
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:"y = 3."
+},
+
+{
+number:4,
+
+question:"Теңсіздіктің шешімін табыңыз.",
+
+visual:`
+<div class="visual-box math">
+145 − (41x − 3x²) ≤ 3(x − 7)²
+</div>
+`,
+
+options:[
+"[−2; +∞)",
+"(−∞; 2)",
+"[2; +∞)",
+"(−∞; 2]",
+"(−∞; −2]"
+],
+
+correct:3,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Жақшаларды ашамыз:
+<span class="solution-formula">
+145 − 41x + 3x² ≤ 3(x² − 14x + 49)
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Оң жақты ашамыз:
+<span class="solution-formula">
+145 − 41x + 3x² ≤ 3x² − 42x + 147
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Екі жақтағы 3x² мүшелері қысқарады:
+<span class="solution-formula">
+145 − 41x ≤ −42x + 147
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+42x-ті сол жаққа қосамыз:
+<span class="solution-formula">
+145 + x ≤ 147
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+<span class="solution-formula">
+x ≤ 2
+</span>
+</li>
+
+<li>
+<b>Жауабы:</b>
+(−∞; 2].
+</li>
+
+</ol>
+`,
+
+keyFact:"Теңсіздіктің шешімі: x ≤ 2."
+},
+
+{
+number:5,
+
+question:"Егер |10x − 5| > 7 және x < 1 болса, онда келесі тұжырымдардың арасындағы x-тің қабылдайтын мәнін табыңыз.",
+
+options:[
+"0",
+"0,8",
+"−0,6",
+"−0,16",
+"0,6"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Модульді екі жағдайға бөлеміз:
+<span class="solution-formula">
+10x − 5 &gt; 7
+</span>
+немесе
+<span class="solution-formula">
+10x − 5 &lt; −7
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Бірінші теңсіздік:
+<span class="solution-formula">
+10x &gt; 12 → x &gt; 1,2
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Екінші теңсіздік:
+<span class="solution-formula">
+10x &lt; −2 → x &lt; −0,2
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Қосымша шарт бойынша x &lt; 1. Сондықтан x &gt; 1,2 тармағы жарамайды.
+</li>
+
+<li>
+<b>5-қадам.</b>
+Берілген нұсқаларды тексереміз. −0,2-ден кіші жалғыз сан:
+<span class="solution-formula">
+−0,6
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:"Шарттарды қанағаттандыратын мән: −0,6."
+},
+
+{
+number:6,
+
+question:"50 адамнан сауалнама жүргізгенде 15 адам тек қана классикалық музыканы, 11 адам тек қана рэп және 10 адам рэпті де, классикалық музыканы да тыңдайтындарын айтты. Музыканы тыңдамайтын адам санын табыңыз.",
+
+visual:`
+<div class="visual-box">
+
+<svg
+viewBox="0 0 650 390"
+role="img"
+aria-label="Классикалық музыка мен рэп тыңдаушыларының Венн диаграммасы"
+>
+
+<rect
+x="25"
+y="20"
+width="600"
+height="340"
+fill="#ffffff"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<circle
+cx="255"
+cy="190"
+r="125"
+fill="none"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<circle
+cx="395"
+cy="190"
+r="125"
+fill="none"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<text
+x="125"
+y="95"
+font-size="28"
+font-style="italic"
+>
+C
+</text>
+
+<text
+x="510"
+y="95"
+font-size="28"
+font-style="italic"
+>
+R
+</text>
+
+<text
+x="205"
+y="205"
+font-size="34"
+>
+15
+</text>
+
+<text
+x="313"
+y="205"
+font-size="34"
+>
+10
+</text>
+
+<text
+x="435"
+y="205"
+font-size="34"
+>
+11
+</text>
+
+</svg>
+
+</div>
+`,
+
+options:[
+"11",
+"15",
+"14",
+"17",
+"12"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Тек классикалық музыка тыңдайтындар:
+<span class="solution-formula">
+15 адам
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Екі музыканы да тыңдайтындар:
+<span class="solution-formula">
+10 адам
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Тек рэп тыңдайтындар:
+<span class="solution-formula">
+11 адам
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Кемінде бір музыканы тыңдайтындардың жалпы саны:
+<span class="solution-formula">
+15 + 10 + 11 = 36
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+Музыка тыңдамайтындар:
+<span class="solution-formula">
+50 − 36 = 14
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:"Музыка тыңдамайтындар саны: 14."
+},
+
+{
+number:7,
+
+question:"A және B шамаларын салыстырыңыз.",
+
+visual:`
+<div class="comparison-grid">
+
+<div class="comparison-cell">
+
+<span class="comparison-title">
+A шамасы
+</span>
+
+<div class="math">
+Егер a = 2b, 0,5b = c, 4c = 3d болса,
+онда d/a табыңыз
+</div>
+
+</div>
+
+<div class="comparison-cell">
+
+<span class="comparison-title">
+B шамасы
+</span>
+
+<div class="math">
+0,2
+</div>
+
+</div>
+
+</div>
+`,
+
+options:[
+"B шамасы үлкен",
+"A шамасы үлкен",
+"Шамаларды салыстыру мүмкін емес",
+"A = B"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+a шамасын b арқылы өрнектейміз:
+<span class="solution-formula">
+a = 2b
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+c шамасы:
+<span class="solution-formula">
+c = 0,5b = b/2
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+4c = 3d теңдігінен:
+<span class="solution-formula">
+d = 4c/3
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+c = b/2 мәнін қоямыз:
+<span class="solution-formula">
+d = 4 · (b/2) / 3 = 2b/3
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+A шамасын табамыз:
+<span class="solution-formula">
+d/a = (2b/3) / 2b = 1/3
+</span>
+</li>
+
+<li>
+<b>6-қадам.</b>
+Салыстырамыз:
+<span class="solution-formula">
+1/3 ≈ 0,333 &gt; 0,2
+</span>
+</li>
+
+<li>
+<b>Қорытынды:</b>
+A шамасы үлкен.
+</li>
+
+</ol>
+`,
+
+keyFact:"A = 1/3, B = 0,2. Сондықтан A шамасы үлкен."
+},
+
+{
+number:8,
+
+question:"(x + 5) ÷ 7 = 51 теңдеуінің шешімін табыңыз.",
+
+options:[
+"323",
+"313",
+"352",
+"252",
+"272"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Теңдеуді жазамыз:
+<span class="solution-formula">
+(x + 5) / 7 = 51
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Екі жағын 7-ге көбейтеміз:
+<span class="solution-formula">
+x + 5 = 51 · 7
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+<span class="solution-formula">
+x + 5 = 357
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+<span class="solution-formula">
+x = 357 − 5 = 352
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:"Теңдеудің шешімі: x = 352."
+},
+
+{
+number:9,
+
+question:"Радиусы 3-ке тең шеңбер берілген. SP кесіндісінің ұзындығын табыңыз.",
+
+visual:`
+<div class="visual-box">
+
+<svg
+viewBox="0 0 520 500"
+role="img"
+aria-label="Шеңбер ішіне салынған квадрат және SP диагоналі"
+>
+
+<circle
+cx="245"
+cy="250"
+r="190"
+fill="none"
+stroke="#111827"
+stroke-width="4"
+/>
+
+<line
+x1="55"
+y1="250"
+x2="435"
+y2="250"
+stroke="#111827"
+stroke-width="4"
+/>
+
+<rect
+x="245"
+y="95"
+width="155"
+height="155"
+fill="none"
+stroke="#111827"
+stroke-width="4"
+/>
+
+<line
+x1="245"
+y1="95"
+x2="400"
+y2="250"
+stroke="#111827"
+stroke-width="4"
+/>
+
+<text x="220" y="292" font-size="29">O</text>
+<text x="400" y="292" font-size="29">P</text>
+<text x="218" y="88" font-size="29">S</text>
+<text x="405" y="90" font-size="29">R</text>
+
+</svg>
+
+</div>
+`,
+
+options:[
+"2√2",
+"2√3",
+"3",
+"2",
+"3√2"
+],
+
+correct:4,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+O — шеңбердің центрі. Сондықтан OP және OS — радиустар:
+<span class="solution-formula">
+OP = OS = 3
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+OSRP фигурасы квадрат. SP — квадраттың диагоналі.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Пифагор теоремасын қолданамыз:
+<span class="solution-formula">
+SP² = OS² + OP²
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+<span class="solution-formula">
+SP² = 3² + 3² = 18
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+<span class="solution-formula">
+SP = √18 = 3√2
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:"SP кесіндісінің ұзындығы: 3√2."
+},
+
+{
+number:10,
+
+question:"A және B шамаларын салыстырыңыз.",
+
+visual:`
+<div class="comparison-grid">
+
+<div class="comparison-cell">
+
+<span class="comparison-title">
+A шамасы
+</span>
+
+<svg
+viewBox="0 0 520 330"
+role="img"
+aria-label="Параллель түзулер және бұрыштары 3x, 2x, 40 градус болатын үшбұрыш"
+>
+
+<line
+x1="35"
+y1="45"
+x2="485"
+y2="45"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<line
+x1="35"
+y1="250"
+x2="485"
+y2="250"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<line
+x1="150"
+y1="250"
+x2="270"
+y2="45"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<line
+x1="270"
+y1="45"
+x2="360"
+y2="250"
+stroke="#111827"
+stroke-width="3"
+/>
+
+<text x="263" y="31" font-size="22">B</text>
+<text x="140" y="278" font-size="22">A</text>
+<text x="352" y="278" font-size="22">C</text>
+
+<text x="98" y="235" font-size="25">3x°</text>
+<text x="372" y="235" font-size="25">2x°</text>
+<text x="260" y="115" font-size="25">40°</text>
+<text x="227" y="82" font-size="24">y°</text>
+
+<text x="492" y="51" font-size="19" font-style="italic">m</text>
+<text x="492" y="256" font-size="19" font-style="italic">n</text>
+
+</svg>
+
+<div class="math">
+m және n параллель болса,
+x бұрышының мәні
+</div>
+
+</div>
+
+<div class="comparison-cell">
+
+<span class="comparison-title">
+B шамасы
+</span>
+
+<div class="math">
+x² + 16x + 64 = 0
+</div>
+
+<div>
+Теңдеуінің шешімі
+</div>
+
+</div>
+
+</div>
+`,
+
+options:[
+"A = B",
+"Шамаларды салыстыру мүмкін емес",
+"B шамасы үлкен",
+"A шамасы үлкен"
+],
+
+correct:3,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Үшбұрыштың A төбесіндегі ішкі бұрыш:
+<span class="solution-formula">
+180° − 3x
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+C төбесіндегі ішкі бұрыш:
+<span class="solution-formula">
+180° − 2x
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Үшбұрыш бұрыштарының қосындысын құрамыз:
+<span class="solution-formula">
+(180° − 3x) + 40° + (180° − 2x) = 180°
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+<span class="solution-formula">
+400° − 5x = 180°
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+<span class="solution-formula">
+5x = 220° → x = 44°
+</span>
+Демек, A шамасы = 44.
+</li>
+
+<li>
+<b>6-қадам.</b>
+B шамасындағы теңдеуді шешеміз:
+<span class="solution-formula">
+x² + 16x + 64 = 0
+</span>
+</li>
+
+<li>
+<b>7-қадам.</b>
+<span class="solution-formula">
+(x + 8)² = 0 → x = −8
+</span>
+Демек, B шамасы = −8.
+</li>
+
+<li>
+<b>8-қадам.</b>
+Салыстырамыз:
+<span class="solution-formula">
+44 &gt; −8
+</span>
+</li>
+
+<li>
+<b>Қорытынды:</b>
+A шамасы үлкен.
+</li>
+
+</ol>
+`,
+
+keyFact:"A = 44, B = −8. Сондықтан A шамасы үлкен."
+},
+  {
+number:11,
+
+question:
+"Сызбада көрсетілген көпбұрыштың EF кесіндісінің ұзындығын табыңыз.",
+
+visual:`
+<div class="visual-box">
+
+<svg
+viewBox="0 0 650 520"
+role="img"
+aria-label="A, B, C, D, E, F, G нүктелері бар көпбұрыш"
+>
+
+<polyline
+points="
+90,440
+330,440
+330,260
+470,260
+470,70
+365,145
+90,145
+90,440
+"
+fill="none"
+stroke="#111827"
+stroke-width="4"
+stroke-linejoin="round"
+/>
+
+<!-- Тік бұрыш белгілері -->
+
+<polyline
+points="90,418 112,418 112,440"
+fill="none"
+stroke="#111827"
+stroke-width="2.5"
+/>
+
+<polyline
+points="308,440 308,418 330,418"
+fill="none"
+stroke="#111827"
+stroke-width="2.5"
+/>
+
+<polyline
+points="330,282 352,282 352,260"
+fill="none"
+stroke="#111827"
+stroke-width="2.5"
+/>
+
+<polyline
+points="448,260 448,238 470,238"
+fill="none"
+stroke="#111827"
+stroke-width="2.5"
+/>
+
+<polyline
+points="90,167 112,167 112,145"
+fill="none"
+stroke="#111827"
+stroke-width="2.5"
+/>
+
+<!-- Нүктелер -->
+
+<text x="72" y="468" font-size="25" font-style="italic">A</text>
+<text x="323" y="468" font-size="25" font-style="italic">B</text>
+<text x="318" y="250" font-size="25" font-style="italic">C</text>
+<text x="475" y="270" font-size="25" font-style="italic">D</text>
+<text x="475" y="63" font-size="25" font-style="italic">E</text>
+<text x="352" y="138" font-size="25" font-style="italic">F</text>
+<text x="72" y="138" font-size="25" font-style="italic">G</text>
+
+<!-- Ұзындықтар -->
+
+<text x="195" y="472" font-size="25">6</text>
+<text x="49" y="305" font-size="25">10</text>
+<text x="215" y="136" font-size="25">7</text>
+<text x="300" y="365" font-size="25">6</text>
+<text x="392" y="295" font-size="25">4</text>
+<text x="484" y="175" font-size="25">8</text>
+
+</svg>
+
+</div>
+`,
+
+options:[
+"4",
+"4√2",
+"√7",
+"3√2",
+"5"
+],
+
+correct:4,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Көлденең бағыттағы толық орын ауыстыруды қараймыз.
+AB кесіндісі:
+<span class="solution-formula">
+AB = 6
+</span>
+Ал CD кесіндісі:
+<span class="solution-formula">
+CD = 4
+</span>
+Сондықтан E нүктесі A нүктесінен көлденең бағытта:
+<span class="solution-formula">
+6 + 4 = 10
+</span>
+бірлік қашықтықта орналасқан.
+</li>
+
+<li>
+<b>2-қадам.</b>
+GF кесіндісінің ұзындығы 7-ге тең. G нүктесі A нүктесінің дәл үстінде болғандықтан, F нүктесінің көлденең координатасы 7 болады.
+</li>
+
+<li>
+<b>3-қадам.</b>
+F пен E нүктелерінің көлденең арақашықтығы:
+<span class="solution-formula">
+10 − 7 = 3
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Тік бағыттағы биіктіктерді табамыз.
+G нүктесінің биіктігі:
+<span class="solution-formula">
+AG = 10
+</span>
+Демек, F нүктесінің биіктігі де 10.
+</li>
+
+<li>
+<b>5-қадам.</b>
+D нүктесінің биіктігі:
+<span class="solution-formula">
+BC = 6
+</span>
+Ал:
+<span class="solution-formula">
+DE = 8
+</span>
+Сондықтан E нүктесінің жалпы биіктігі:
+<span class="solution-formula">
+6 + 8 = 14
+</span>
+</li>
+
+<li>
+<b>6-қадам.</b>
+E мен F нүктелерінің тік арақашықтығы:
+<span class="solution-formula">
+14 − 10 = 4
+</span>
+</li>
+
+<li>
+<b>7-қадам.</b>
+EF тікбұрышты үшбұрыштың гипотенузасы болады. Пифагор теоремасын қолданамыз:
+<span class="solution-formula">
+EF² = 3² + 4²
+</span>
+</li>
+
+<li>
+<b>8-қадам.</b>
+<span class="solution-formula">
+EF² = 9 + 16 = 25
+</span>
+<span class="solution-formula">
+EF = 5
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"EF кесіндісінің көлденең проекциясы 3, тік проекциясы 4. Сондықтан EF = 5."
+},
+
+{
+number:12,
+
+question:
+"Теңқабырғалы үшбұрыш берілген және оның қабырғалары 6n + 7, n + 22, 4n + 13 екені белгілі болса, n-нің мәнін табыңыз.",
+
+options:[
+"1",
+"3",
+"5",
+"4",
+"2"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Теңқабырғалы үшбұрыштың барлық қабырғалары өзара тең.
+Сондықтан алғашқы екі өрнекті теңестіреміз:
+<span class="solution-formula">
+6n + 7 = n + 22
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+n мүшелерін сол жаққа, сандарды оң жаққа жинаймыз:
+<span class="solution-formula">
+6n − n = 22 − 7
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+<span class="solution-formula">
+5n = 15
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Екі жағын 5-ке бөлеміз:
+<span class="solution-formula">
+n = 3
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+Үшінші қабырғамен тексереміз:
+<span class="solution-formula">
+6 · 3 + 7 = 25
+</span>
+<span class="solution-formula">
+3 + 22 = 25
+</span>
+<span class="solution-formula">
+4 · 3 + 13 = 25
+</span>
+Барлық қабырғалар тең.
+</li>
+
+</ol>
+`,
+
+keyFact:
+"n = 3 болғанда үш қабырғаның әрқайсысы 25-ке тең."
+},
+
+{
+number:13,
+
+question:
+"Теңсіздіктің шешімін табыңыз.",
+
+visual:`
+<div class="visual-box math">
+(√x³ − 6)(√x³ + 6) &lt; 180
+</div>
+`,
+
+options:[
+"(6; +∞)",
+"(−∞; 6)",
+"[−6; +∞)",
+"(−6; +∞]",
+"[6; +∞)"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Қысқаша көбейту формуласын қолданамыз:
+<span class="solution-formula">
+(a − b)(a + b) = a² − b²
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+<span class="solution-formula">
+(√x³ − 6)(√x³ + 6) = x³ − 36
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Теңсіздікті жазамыз:
+<span class="solution-formula">
+x³ − 36 &lt; 180
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+36 санын оң жаққа өткіземіз:
+<span class="solution-formula">
+x³ &lt; 216
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+<span class="solution-formula">
+x &lt; 6
+</span>
+</li>
+
+<li>
+<b>6-қадам.</b>
+Берілген жауап нұсқалары бойынша:
+<span class="solution-formula">
+(−∞; 6)
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Тест нұсқалары бойынша жауап: (−∞; 6)."
+},
+
+{
+number:14,
+
+question:
+"ABCD тіктөртбұрышы берілген. Боялған фигураның ауданын табыңыз.",
+
+visual:`
+<div class="visual-box">
+
+<svg
+viewBox="0 0 700 400"
+role="img"
+aria-label="ABCD тіктөртбұрышы және боялған DEFB төртбұрышы"
+>
+
+<defs>
+
+<pattern
+id="criticalDots14"
+width="12"
+height="12"
+patternUnits="userSpaceOnUse"
+>
+
+<circle
+cx="3"
+cy="3"
+r="2"
+fill="#475569"
+/>
+
+<circle
+cx="9"
+cy="9"
+r="2"
+fill="#475569"
+/>
+
+</pattern>
+
+</defs>
+
+<!-- Тіктөртбұрыш -->
+
+<rect
+x="100"
+y="55"
+width="480"
+height="280"
+fill="none"
+stroke="#111827"
+stroke-width="4"
+/>
+
+<!-- Боялған фигура -->
+
+<polygon
+points="
+100,255
+450,55
+580,55
+100,335
+"
+fill="url(#criticalDots14)"
+stroke="#111827"
+stroke-width="4"
+/>
+
+<!-- Нүктелер -->
+
+<text x="78" y="48" font-size="25" font-style="italic">A</text>
+<text x="588" y="48" font-size="25" font-style="italic">B</text>
+<text x="588" y="362" font-size="25" font-style="italic">C</text>
+<text x="78" y="362" font-size="25" font-style="italic">D</text>
+
+<text x="443" y="48" font-size="25" font-style="italic">F</text>
+<text x="76" y="254" font-size="25" font-style="italic">E</text>
+
+<!-- Өлшемдер -->
+
+<text x="268" y="45" font-size="25">8</text>
+<text x="510" y="45" font-size="25">3</text>
+
+<text x="62" y="158" font-size="25">5</text>
+<text x="62" y="305" font-size="25">2</text>
+
+</svg>
+
+</div>
+`,
+
+options:[
+"21,5",
+"23",
+"18,5",
+"16,5",
+"19"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Тіктөртбұрыштың ұзындығын табамыз:
+<span class="solution-formula">
+AB = AF + FB = 8 + 3 = 11
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+Тіктөртбұрыштың биіктігі:
+<span class="solution-formula">
+AD = AE + ED = 5 + 2 = 7
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Тіктөртбұрыштың толық ауданы:
+<span class="solution-formula">
+S<sub>ABCD</sub> = 11 · 7 = 77
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Боялмаған AEF тікбұрышты үшбұрышының ауданы:
+<span class="solution-formula">
+S<sub>AEF</sub> = 1/2 · 5 · 8 = 20
+</span>
+</li>
+
+<li>
+<b>5-қадам.</b>
+Боялмаған DBC үшбұрышының табаны:
+<span class="solution-formula">
+DC = 11
+</span>
+ал биіктігі:
+<span class="solution-formula">
+BC = 7
+</span>
+</li>
+
+<li>
+<b>6-қадам.</b>
+DBC үшбұрышының ауданы:
+<span class="solution-formula">
+S<sub>DBC</sub> = 1/2 · 11 · 7 = 38,5
+</span>
+</li>
+
+<li>
+<b>7-қадам.</b>
+Боялған бөліктің ауданын табамыз:
+<span class="solution-formula">
+S = 77 − 20 − 38,5
+</span>
+</li>
+
+<li>
+<b>8-қадам.</b>
+<span class="solution-formula">
+S = 18,5
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Боялған фигураның ауданы: 18,5."
+},
+
+{
+number:15,
+
+question:
+"Екі санның қосындысы 20,6-ға тең. Бірінші санның мәні 13,8-ге тең болса, екінші санның мәнін табыңыз.",
+
+options:[
+"4,8",
+"5,8",
+"9,8",
+"6,8",
+"7,8"
+],
+
+correct:3,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Екінші санды x деп белгілейміз:
+<span class="solution-formula">
+13,8 + x = 20,6
+</span>
+</li>
+
+<li>
+<b>2-қадам.</b>
+13,8 санын оң жаққа өткіземіз:
+<span class="solution-formula">
+x = 20,6 − 13,8
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Ондық бөлшектерді азайтамыз:
+<span class="solution-formula">
+20,6 − 13,8 = 6,8
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Тексеру:
+<span class="solution-formula">
+13,8 + 6,8 = 20,6
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Екінші санның мәні: 6,8."
+}
+
+];
+  const analyticalQuestions = [
+
+{
+number:16,
+
+question:
+"Көп нүктенің орнына қажет сөзді қойыңыз. Адам бойындағы зиянды әдет-дағдыны түп тамырымен жою үшін аз да болса бар күш-жігерімен кіріссе, одан құтылу қиынға түспес еді. ... қиыншылығы сол, мысқалдап ұзақ уақыт енген әдет-дағдыны құрту үшін, соншама ұзақ уақыт күресу керек (К.Д.Ушинский).",
+
+options:[
+"тағы да",
+"себебі",
+"сондықтан",
+"бірақ",
+"өйткені"
+],
+
+correct:3,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Алғашқы сөйлемде зиянды әдеттен құтылуға болатыны айтылады.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Келесі сөйлемде оған қарама-қарсы қиындық көрсетілген.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Қарама-қарсылық мағынасын білдіретін жалғаулық:
+<span class="solution-formula">
+бірақ
+</span>
+</li>
+
+<li>
+<b>4-қадам.</b>
+Сөйлемді толық оқимыз:
+<span class="solution-formula">
+Бірақ қиыншылығы сол...
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Қарама-қарсылық мәнін беретін дұрыс сөз — «бірақ»."
+},
+
+{
+number:17,
+
+question:
+"Көп нүктенің орнына қажет сөзді қойыңыз. Халықтық талғам мен даналықтың бір тармағы саналатын ... – үлкендердің нұсқауы, ұрпақтардың ұстанымы боларлық өсиет. Оны таңдаулы тұлға, көреген кісі, ақсақал, беделді адамдар береді.",
+
+options:[
+"қағида",
+"мақалдар",
+"дәстүр",
+"бата",
+"салт"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Сөйлемде ұрпақтан ұрпаққа жалғасатын ұстаным мен өсиет туралы айтылған.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Мұндай құбылыс халықтың өмір салты мен тәрбиесінде тұрақты қалыптасады.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Оған сәйкес сөз:
+<span class="solution-formula">
+дәстүр
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Дұрыс толықтыру: «дәстүр»."
+},
+
+{
+number:18,
+
+question:
+"Көп нүктенің орнына қажет сөзді қойыңыз. Тіл – ұлттың жаны. Тіл – идеяның, сезімнің, ойдың ... көрінісі (Л.Н.Толстой).",
+
+options:[
+"сахнадағы",
+"эмоциясыз",
+"жанды",
+"әдеби",
+"материалды"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Тіл идеяны, сезімді және ойды жеткізеді.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Сондықтан тіл олардың тірі, әсерлі бейнесі ретінде сипатталады.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Мағынаға сәйкес сөз:
+<span class="solution-formula">
+жанды
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Дұрыс тіркес: «ойдың жанды көрінісі»."
+},
+
+{
+number:19,
+
+context:`
+<div class="context-card">
+
+<h3>Мәтін</h3>
+
+<p>
+Қалыптасқан әрбір әдет белгілі бір нәтиже тудырып қана қоймай,
+одан да маңызды дүниеге сенімді болуға үйретеді. Түрлі мақсатқа
+жету қолыңыздан келетінін түсінесіз.
+</p>
+
+<p>
+Әдеттер – автоматты түрде жүзеге асатын шешімдер жиынтығы.
+Олардың маңызы өте зор. Әдет қалыптасқаннан кейін ми белсенділігі
+төмендейді. Яғни, әдет дегеніміз – адамның бір кездері проблеманы
+шешу үшін істеген, қазір есінде қалған әрекеттері.
+</p>
+
+<p>
+Әдеттер еркіндікті шектемейді. Олар сізді азат етеді. Шындығында,
+әдеттерін басқара алмайтын адамда еркіндік аз. Мысалы, ақшаны
+дұрыс жұмсауға әдеттенбеген адам үнемі әр тиыны үшін күресуге
+мәжбүр. Салауатты өмір салтын әдетке айналдырмаған адам әрдайым
+күш-қуаттың аздығынан зардап шегеді. Әдеттеріңіз әбден қалыптасып,
+күнделікті өмірдегі басты мәселелер автоматты түрде шешіліп отырса,
+артық жұмыстардан арылған ми жаңа сынақтармен күресуге, жаңа
+міндеттерді орындауға белсене кіріседі.
+</p>
+
+</div>
+`,
+
+question:
+"Асты сызылған сөздің баламасын табыңыз. «Ми белсенділігі төмендейді.»",
+
+options:[
+"құрылысы",
+"жұмысы",
+"жүйесі",
+"күші",
+"қуаты"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+«Белсенділік» сөзі әрекет ету, жұмыс істеу мағынасында қолданылған.
+</li>
+
+<li>
+<b>2-қадам.</b>
+«Ми белсенділігі төмендейді» дегенді:
+<span class="solution-formula">
+мидың жұмысы төмендейді
+</span>
+деп айтуға болады.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Сондықтан дұрыс балама:
+<span class="solution-formula">
+жұмысы
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"«Белсенділігі» сөзіне мәтіндегі ең жақын балама — «жұмысы»."
+},
+
+{
+number:20,
+
+question:
+"Еркіндік, бостандық сөздерінің баламасын табыңыз.",
+
+options:[
+"бодан",
+"бұғау",
+"қамау",
+"қапас",
+"азат"
+],
+
+correct:4,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+«Еркіндік» және «бостандық» — тәуелсіз болу мағынасындағы сөздер.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Берілген нұсқалардың ішінде осы мағынаға сәйкес сөз:
+<span class="solution-formula">
+азат
+</span>
+</li>
+
+<li>
+<b>3-қадам.</b>
+Қалған нұсқалар керісінше шектеу, қамау мағынасын білдіреді.
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Еркіндік = бостандық = азаттық."
+},
+
+{
+number:21,
+
+question:
+"Мәтінге тақырып қойыңыз.",
+
+options:[
+"Жұмыс режимі",
+"Салауатты өмір салты",
+"Мәселені шешу",
+"Міндеттеме алу",
+"Әдет қалыптастыру"
+],
+
+correct:4,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтіннің барлық абзацында әдеттің қалыптасуы мен маңызы сөз болады.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Әдеттің автоматты әрекетке айналуы, еркіндік беруі және өмірді жеңілдетуі түсіндіріледі.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Сондықтан мәтіннің негізгі тақырыбы:
+<span class="solution-formula">
+Әдет қалыптастыру
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Мәтіннің ең дәл тақырыбы — «Әдет қалыптастыру»."
+},
+  {
+number:22,
+
+context:`
+<div class="context-card">
+
+<h3>Мәтін</h3>
+
+<p>
+Қазақта сирек те болса кездесетін баскиімнің ерекше түрі – қарқара.
+Бұл сөз баскиімге ғана емес, қазақ тұрмысындағы басқа заттарға
+қатысты да көп қолданылады. Мысалы, нарға теңделетін көркем
+жүксандық; таулардың ішінде ерекшеленіп тұратын шоқы; биік сұңғақ
+адам, зат. Көшкен кезде түйе үстіне қырғауылдың құйрығы мен
+тырнаның мойын жүнін қосып байлаған затқа байланысты
+«қарқаралы көш» деп даралаған.
+</p>
+
+<p>
+Дегенмен, қазақ ұғымында қарқара ерекше дара баскиім дегенге саяды.
+Оны тек қыздар ғана емес, сұлтан, төрелер, сондай-ақ хан балалары да
+өзге жұрттың балаларынан ерекшеленіп жүру үшін қадаған.
+</p>
+
+<p>
+Қарқара – құтанға, тырнаға ұқсас сұңғақ, сымбатты құс. Баскиімге
+қадалған «құс қауырсыны» түрлі мағына береді. Қазақтар тілек,
+ниет белгісі, киелі тұмарды да «қарқара» деп атаған.
+</p>
+
+<p>
+Қадірлі, ең асыл дүние ретінде жүрген баскиімге қадалатын қарқара
+киелі құстың қауырсынын қадаудың астарында оқыс пәле-жаладан
+сақтанамыз деген наным бар болса, ол наным бертін келе ырымға
+айналған. Ырымның екінші жағында халықтың әдемілікке,
+сұлулыққа деген ерекше құштарлығы жатыр.
+</p>
+
+<p>
+Қарқара тақырыбын арнайы зерттеген ғалым С. Медеубекұлы:
+«Биік төбелі қарқараның милығына айнала құндыз тұтынып, маңдай
+тұсын жоғарыдан төмен қарай үшкілдеп жыра тігеді. Биік, сәнді,
+әсем безендірілген және қарқара деген құстың қауырсынын қадаған
+баскиімді жас келіншектер мен қыздар сән-салтанаты мен жарасымын
+арттыру үшін киген», – деп жазады.
+</p>
+
+<p>
+Қарқара қазақтан басқа түркі тектес халықтардан қырғыздарда ғана
+кездеседі.
+</p>
+
+</div>
+`,
+
+question:
+"Баскиімнің қарқара аталуы себебін көрсетіңіз.",
+
+options:[
+"қырғауылдың құйрығы тағылып, баскиім дараланып көрінеді",
+"баскиімге құтанның қауырсынының қадалуымен байланысты",
+"баскиімге қарқара деген құстың қауырсыны қадалады",
+"түйеқұстың мойын жүні байланып, ерекше көрінгендіктен",
+"сұңғақ тырнаға ұқсас болып келетін баскиімнің формасына қатысты"
+],
+
+correct:0,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтінде көш кезінде түйе үстіне қырғауылдың құйрығы мен тырнаның
+мойын жүнін қосып байлаған заттың «қарқаралы көш» деп дараланғаны айтылады.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Яғни, қарқара атауы баскиімнің өзге баскиімдерден ерекше,
+дара көрінуімен байланысты.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Берілген нұсқалардың ішінде осы мазмұнды дәл беретін жауап:
+<span class="solution-formula">
+қырғауылдың құйрығы тағылып, баскиім дараланып көрінеді
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Қарқара атауы баскиімнің қырғауыл құйрығымен дараланып көрінуіне байланысты."
+},
+
+{
+number:23,
+
+question:
+"Баскиімге «құс қауырсынын» қадаудың себебін көрсетіңіз.",
+
+options:[
+"баскиімнің биік болып тұруы көзделген",
+"баскиімге қауырсын қадау міндет болған",
+"ешқандай арнайы себеп болмаған",
+"құс қауырсыны қолжетімді болғандықтан",
+"жамандық атаулыдан қорғайды деген сенім"
+],
+
+correct:4,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтінде киелі құстың қауырсынын қадаудың астарында
+оқыс пәле-жаладан сақтану нанымы болғаны айтылады.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Бұл наным кейін ырымға айналған.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Сондықтан құс қауырсынын қадаудың негізгі себебі:
+<span class="solution-formula">
+жамандық атаулыдан қорғайды деген сенім
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Құс қауырсыны жамандықтан қорғайтын киелі белгі ретінде қабылданған."
+},
+
+{
+number:24,
+
+question:
+"Мәтіндегі негізгі ойды анықтаңыз.",
+
+options:[
+"қазақ халқының әдемілікке деген құштарлығы ерекше болып келеді",
+"қарқара – түркі халықтары ішінде қазақ пен қырғызға ортақ",
+"қарқара – ерекшеленіп жүру үшін киетін сирек кездесетін баскиім",
+"қарқара сөзі қазақ тұрмысындағы заттарға қатысты қолданылады",
+"халықтың пәле-жаладан сақтанудың жолдарына қатысты нанымы"
+],
+
+correct:2,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтінде қарқараның атауы, сыртқы көрінісі, кімдер кигені,
+қандай мақсатта пайдаланылғаны баяндалады.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Негізгі назар қарқараның ерекше, дара, сирек кездесетін баскиім
+екеніне аударылған.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Сондықтан мәтіннің негізгі ойы:
+<span class="solution-formula">
+қарқара – ерекшеленіп жүру үшін киетін сирек кездесетін баскиім
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Мәтіннің негізгі ойы – қарқараның ерекше, дара баскиім болуы."
+},
+
+{
+number:25,
+
+context:`
+<div class="context-card">
+
+<h3>Мәтін</h3>
+
+<p>
+Тіршілік тірегі – табиғат. Ол жалпы адам баласының ортақ қазынасы.
+Ең бірінші, табиғатты туған анаңдай түсіну, екінші, табиғатқа туған
+бабаңадай табыну. Үшінші, табиғатты туған ұлыңдай қорғауың қажет.
+Осы үш ұғымды бір-бірінен бөліп қарау мүмкін емес. Түсінбей тұрып
+табыну, табынбай тұрып қорғаудың қисыны жоқ. Табиғат пен адамзат
+дүниенің бірінсіз-бірі тұл болатын ажырамас бөліктері.
+</p>
+
+</div>
+`,
+
+question:
+"«Тұл болу» тіркесінің мағынасын табыңыз.",
+
+options:[
+"жоқ болу",
+"бар болу",
+"өну",
+"пайда болу",
+"өсу"
+],
+
+correct:0,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтінде табиғат пен адамзаттың бірінсіз-бірі өмір сүре алмайтыны айтылған.
+</li>
+
+<li>
+<b>2-қадам.</b>
+«Тұл болу» тіркесі жалғыз қалу, тірексіз қалу, жоқ болу мағынасын береді.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Берілген жауаптардың ішіндегі ең дәл мағына:
+<span class="solution-formula">
+жоқ болу
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"«Тұл болу» — жоқ болу, тірексіз қалу."
+},
+
+{
+number:26,
+
+question:
+"Сөйлемді мәтін бойынша толықтырыңыз. Табиғатқа ... табыну қажет.",
+
+options:[
+"туған-туысыңдай",
+"туыстарыңдай",
+"жақын адамыңдай",
+"туған балаңдай",
+"туған бабаңдай"
+],
+
+correct:4,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтіндегі тиісті сөйлемді табамыз.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Онда:
+<span class="solution-formula">
+табиғатқа туған бабаңдай табыну
+</span>
+деп берілген.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Сондықтан дұрыс жауап:
+<span class="solution-formula">
+туған бабаңдай
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Мәтіндегі дәл тіркес — «табиғатқа туған бабаңдай табыну»."
+},
+
+{
+number:27,
+
+question:
+"Сөйлемді мәтін бойынша толықтырыңыз. Табиғатты туған ... түсіну қажет.",
+
+options:[
+"анаңдай",
+"жеріңдей",
+"балаңдай",
+"еліңдей",
+"топырағыңдай"
+],
+
+correct:0,
+
+explanation:`
+<ol class="solution-steps">
+
+<li>
+<b>1-қадам.</b>
+Мәтіндегі бірінші шартты қараймыз.
+</li>
+
+<li>
+<b>2-қадам.</b>
+Онда:
+<span class="solution-formula">
+табиғатты туған анаңдай түсіну
+</span>
+деп жазылған.
+</li>
+
+<li>
+<b>3-қадам.</b>
+Сондықтан дұрыс жауап:
+<span class="solution-formula">
+анаңдай
+</span>
+</li>
+
+</ol>
+`,
+
+keyFact:
+"Дұрыс тіркес — «табиғатты туған анаңдай түсіну»."
+},
+  {
+number:28,
+
+context:`
+<div class="context-card">
+
+<h3>1-мәтін</h3>
+
+<p>
+Өсімдіктердің түпкі тарихы шыққан тегін тексеріп келіп, жер жүзіне кең
+тараған өсімдіктер қауымын жіктеу, топтастыру өте жауапты және өте
+қиын жұмыс екенін еске салған жөн.
+</p>
+
+<p>
+Биология ғылымы барлық өсімдіктерді олардың тарихи тегіне,
+өсімдіктердің және олардың дәнінің құрылысына қарай тұқымдастыққа,
+тектерге, түрлерге, түп-тармақтарға, сорттарға бөледі.
+</p>
+
+<p>
+Тұқымдастық (Familia) – өсімдіктер дүниесіндегі ең үлкен категориялық
+жік. Бұл жіктеу де өсімдіктің шыққан тегіне, оның дәнінің құрылысына
+қарай бөлінетін бірлік. Ауыл шаруашылығында көп тараған
+тұқымдастарға дәнді дақылдар, бұршақ тұқымдастар жатады.
+(Ә.Ізтаев, Б.Отыншиев)
+</p>
+
+<h3>2-мәтін</h3>
+
+<p>
+Бидай – адам баласы ежелден пайдаланып келе жатқан ең негізгі
+дақыл. Ол жер шарында кең таралған, қазір барлық егіліп жүрген ауыл
+шаруашылығы дақылдарының ішінде бірінші орын алады.
+</p>
+
+<p>
+Бидайдың мұндай кең таралуына себеп – тек соның ғана химиялық
+құрамында болатын, сумен қосылып, клейковинаға айналатын
+белоктардың болуы. Соның нәтижесінде бидайдың ұнынан нан,
+макарон өнімдері дайындалады.
+</p>
+
+<p>
+Бидай белогының құрамында адам ағзасына қажетті барлық амин
+қышқылдары бар. Бидай дәнді дақылдар тұқымдастығына жатады,
+кейде оларды қоңырбас тұқымдас деп те атайды. Дәнді дақылдар
+тұқымдастығы 500-ге жақын тектерді біріктіреді.
+(Ә.Ізтаев, Б.Отыншиев)
+</p>
+
+</div>
+`,
+
+question:
+"Екі мәтіннің ерекшелігі неде екенін көрсетіңіз.",
+
+options:[
+"мәтіндердің әртүрлі салаға қатысты екендігінде",
+"ақпараттың мазмұнына қатысты: жалпы мәселеге және нақты бір нысанға қатыстылығында",
+"термин сөздердің бір мәтінде қолданылуы, екінші мәтінде ұшыраспауында",
+"мәтіндердің жазылу стилдерінде",
+"мәтіндердегі ақпараттың берілу сипатында"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li><b>1-қадам.</b> Бірінші мәтінде өсімдіктерді жіктеу туралы жалпы мәлімет берілген.</li>
+
+<li><b>2-қадам.</b> Екінші мәтінде нақты бір өсімдік – бидай туралы айтылады.</li>
+
+<li><b>3-қадам.</b> Сондықтан ерекшелігі:
+<span class="solution-formula">
+жалпы мәселе және нақты бір нысан туралы болуы.
+</span></li>
+
+</ol>
+`,
+
+keyFact:
+"1-мәтін – жалпы тақырып, 2-мәтін – нақты нысан."
+},
+
+{
+number:29,
+
+question:
+"Мәтіндердің жазылу стилін анықтаңыз.",
+
+options:[
+"1-мәтін іс-қағаздар стилінде, 2-мәтін ғылыми стильде жазылған",
+"екі мәтін де ғылыми стильде жазылған",
+"1-мәтін ғылыми стильде, 2-мәтін публицистикалық стильде",
+"1-мәтін публицистикалық стильде, 2-мәтін ғылыми стильде",
+"екі мәтін де публицистикалық стильде жазылған"
+],
+
+correct:1,
+
+explanation:`
+<ol class="solution-steps">
+
+<li><b>1-қадам.</b> Екі мәтінде де ғылыми терминдер қолданылған.</li>
+
+<li><b>2-қадам.</b> Ақпарат нақты, анықтамалық сипатта берілген.</li>
+
+<li><b>3-қадам.</b> Сондықтан екеуі де ғылыми стильге жатады.</li>
+
+</ol>
+`,
+
+keyFact:
+"Екі мәтін де ғылыми стильде жазылған."
+},
+
+{
+number:30,
+
+question:
+"Екі мәтіннің де мазмұнын ашатын тірек сөздерді анықтаңыз.",
+
+options:[
+"биология, дәнді дақылдар, макарон өнімдері",
+"дәннің құрылысы, химиялық құрамы, амин қышқылдары",
+"өсімдіктер, түп-тармақ, категориялық жік",
+"ауыл шаруашылығы, тұқымдастық, дәнді дақыл",
+"жер шары, таралымы, қоңырбас тұқымдастар"
+],
+
+correct:3,
+
+explanation:`
+<ol class="solution-steps">
+
+<li><b>1-қадам.</b> Ортақ ұғымдарды іздейміз.</li>
+
+<li><b>2-қадам.</b> Екі мәтінде де ауыл шаруашылығы, тұқымдастық және дәнді дақылдар туралы айтылады.</li>
+
+<li><b>3-қадам.</b> Сондықтан дұрыс жауап:
+<span class="solution-formula">
+ауыл шаруашылығы, тұқымдастық, дәнді дақыл
+</span></li>
+
+</ol>
+`,
+
+keyFact:
+"Екі мәтінді байланыстыратын негізгі тірек сөздер – ауыл шаруашылығы, тұқымдастық, дәнді дақыл."
+},
+  ];
+
+const contextStyle = document.createElement("style");
+
+contextStyle.textContent = `
+.context-card {
+  margin: 5px 0 18px;
+  padding: 18px;
+  border: 1px solid #dce3ee;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.context-card h3 {
+  margin: 0 0 10px;
+  color: var(--primary-dark);
+}
+
+.context-card h3:not(:first-child) {
+  margin-top: 22px;
+}
+
+.context-card p {
+  margin: 0 0 13px;
+  text-align: justify;
+  line-height: 1.7;
+}
+
+.context-card p:last-child {
+  margin-bottom: 0;
+}
+`;
+
+document.head.appendChild(contextStyle);
+
+function createAnalyticalSection() {
+  const analyticalSection =
+    document.createElement("section");
+
+  analyticalSection.id =
+    "analyticalSection";
+
+  analyticalSection.className =
+    "test-section";
+
+  analyticalSection.innerHTML = `
+    <div class="section-header">
+
+      <h2>
+        Аналитикалық ойлау
+      </h2>
+
+      <p>
+        15 сұрақ • Әр дұрыс жауап – 1 балл
+      </p>
+
+      <div class="section-information">
+
+        <span class="information-badge">
+          15 сұрақ
+        </span>
+
+        <span class="information-badge">
+          15 балл
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="progress-card">
+
+      <div class="progress-information">
+
+        <span>
+          Орындалуы
+        </span>
+
+        <strong id="analyticalProgressText">
+          0 / 15
+        </strong>
+
+      </div>
+
+      <div class="progress-line">
+        <span id="analyticalProgressBar"></span>
+      </div>
+
+    </div>
+
+    <div
+      id="analyticalResult"
+      class="result-card"
+    >
+
+      <h3>
+        Аналитикалық ойлау нәтижесі
+      </h3>
+
+      <div
+        id="analyticalScore"
+        class="score"
+      >
+        0 / 15
+      </div>
+
+    </div>
+
+    <div id="analyticalQuiz"></div>
+
+    <div class="actions">
+
+      <button
+        class="reset-button"
+        onclick="resetAnalyticalTest()"
+        type="button"
+      >
+        Қайта бастау
+      </button>
+
+      <button
+        class="show-result-button"
+        onclick="showAnalyticalResults()"
+        type="button"
+      >
+        Нәтижені көрсету
+      </button>
+
+    </div>
+  `;
+
+  const criticalSection =
+    document.getElementById(
+      "criticalSection"
+    );
+
+  criticalSection.insertAdjacentElement(
+    "afterend",
+    analyticalSection
+  );
+}
+
+function renderQuestion(
+  question,
+  questionIndex,
+  sectionName
+) {
+  const visualHtml =
+    question.visual || "";
+
+  const contextHtml =
+    question.context || "";
+
+  const optionsHtml =
+    question.options
+      .map((option, optionIndex) => {
+        return `
+          <label
+            class="option"
+            data-option-index="${optionIndex}"
+          >
+
+            <input
+              type="radio"
+              name="${sectionName}Question${questionIndex}"
+              value="${optionIndex}"
+            >
+
+            <span class="option-letter">
+              ${letters[optionIndex]})
+            </span>
+
+            <span>
+              ${option}
+            </span>
+
+          </label>
+        `;
+      })
+      .join("");
+
+  return `
+    <article
+      class="question"
+      data-question-index="${questionIndex}"
+    >
+
+      <div class="question-number">
+        ${question.number}-сұрақ
+      </div>
+
+      ${contextHtml}
+
+      <h3 class="question-title">
+        ${question.question}
+      </h3>
+
+      ${visualHtml}
+
+      <div class="options">
+        ${optionsHtml}
+      </div>
+
+      <div class="explanation">
+
+        <div class="question-score"></div>
+
+        <div class="correct-answer">
+
+          Дұрыс жауап:
+
+          <br>
+
+          ${letters[question.correct]})
+          ${question.options[question.correct]}
+
+        </div>
+
+        <div class="explanation-title">
+          Түсіндірме
+        </div>
+
+        <div class="explanation-text">
+          ${question.explanation}
+        </div>
+
+        <div class="key-fact">
+          ${question.keyFact}
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+function renderCriticalQuestions() {
+  const quiz =
+    document.getElementById(
+      "criticalQuiz"
+    );
+
+  quiz.innerHTML =
+    criticalQuestions
+      .map((question, questionIndex) => {
+        return renderQuestion(
+          question,
+          questionIndex,
+          "critical"
+        );
+      })
+      .join("");
+
+  quiz
+    .querySelectorAll("input")
+    .forEach(input => {
+      input.addEventListener(
+        "change",
+        updateCriticalProgress
+      );
+    });
+}
+
+function renderAnalyticalQuestions() {
+  const quiz =
+    document.getElementById(
+      "analyticalQuiz"
+    );
+
+  quiz.innerHTML =
+    analyticalQuestions
+      .map((question, questionIndex) => {
+        return renderQuestion(
+          question,
+          questionIndex,
+          "analytical"
+        );
+      })
+      .join("");
+
+  quiz
+    .querySelectorAll("input")
+    .forEach(input => {
+      input.addEventListener(
+        "change",
+        updateAnalyticalProgress
+      );
+    });
+}
+  function openSection(sectionName) {
+  const criticalSection =
+    document.getElementById(
+      "criticalSection"
+    );
+
+  const analyticalSection =
+    document.getElementById(
+      "analyticalSection"
+    );
+
+  const criticalTab =
+    document.getElementById(
+      "criticalTab"
+    );
+
+  const analyticalTab =
+    document.getElementById(
+      "analyticalTab"
+    );
+
+  criticalSection.classList.remove(
+    "active"
+  );
+
+  analyticalSection.classList.remove(
+    "active"
+  );
+
+  criticalTab.classList.remove(
+    "active"
+  );
+
+  analyticalTab.classList.remove(
+    "active"
+  );
+
+  if (sectionName === "critical") {
+    criticalSection.classList.add(
+      "active"
+    );
+
+    criticalTab.classList.add(
+      "active"
+    );
+  } else {
+    analyticalSection.classList.add(
+      "active"
+    );
+
+    analyticalTab.classList.add(
+      "active"
+    );
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+function activateNavigation() {
+  const criticalTab =
+    document.getElementById(
+      "criticalTab"
+    );
+
+  const analyticalTab =
+    document.getElementById(
+      "analyticalTab"
+    );
+
+  analyticalTab.disabled = false;
+
+  analyticalTab.classList.remove(
+    "locked"
+  );
+
+  criticalTab.addEventListener(
+    "click",
+    () => {
+      openSection("critical");
+    }
+  );
+
+  analyticalTab.addEventListener(
+    "click",
+    () => {
+      openSection("analytical");
+    }
+  );
+}
+
+function countAnsweredQuestions(quizId) {
+  const questionBlocks =
+    document.querySelectorAll(
+      `#${quizId} .question`
+    );
+
+  let answered = 0;
+
+  questionBlocks.forEach(
+    questionBlock => {
+      if (
+        questionBlock.querySelector(
+          "input:checked"
+        )
+      ) {
+        answered++;
+      }
+    }
+  );
+
+  return answered;
+}
+
+function updateCriticalProgress() {
+  const answered =
+    countAnsweredQuestions(
+      "criticalQuiz"
+    );
+
+  document.getElementById(
+    "criticalProgressText"
+  ).textContent =
+    `${answered} / ${criticalQuestions.length}`;
+
+  document.getElementById(
+    "criticalProgressBar"
+  ).style.width =
+    `${answered / criticalQuestions.length * 100}%`;
+}
+
+function updateAnalyticalProgress() {
+  const answered =
+    countAnsweredQuestions(
+      "analyticalQuiz"
+    );
+
+  document.getElementById(
+    "analyticalProgressText"
+  ).textContent =
+    `${answered} / ${analyticalQuestions.length}`;
+
+  document.getElementById(
+    "analyticalProgressBar"
+  ).style.width =
+    `${answered / analyticalQuestions.length * 100}%`;
+}
+
+function showSectionResults(
+  questions,
+  quizId,
+  resultId,
+  scoreId
+) {
+  const quiz =
+    document.getElementById(
+      quizId
+    );
+
+  const questionBlocks =
+    quiz.querySelectorAll(
+      ".question"
+    );
+
+  let totalScore = 0;
+
+  questionBlocks.forEach(
+    (questionBlock, questionIndex) => {
+      const question =
+        questions[questionIndex];
+
+      const selectedInput =
+        questionBlock.querySelector(
+          "input:checked"
+        );
+
+      const selectedIndex =
+        selectedInput
+          ? Number(selectedInput.value)
+          : null;
+
+      const optionBlocks =
+        questionBlock.querySelectorAll(
+          ".option"
+        );
+
+      optionBlocks.forEach(
+        (optionBlock, optionIndex) => {
+          optionBlock.classList.remove(
+            "correct",
+            "wrong"
+          );
+
+          if (
+            optionIndex === question.correct
+          ) {
+            optionBlock.classList.add(
+              "correct"
+            );
+          }
+
+          if (
+            selectedIndex === optionIndex &&
+            selectedIndex !== question.correct
+          ) {
+            optionBlock.classList.add(
+              "wrong"
+            );
+          }
+        }
+      );
+
+      const scoreBlock =
+        questionBlock.querySelector(
+          ".question-score"
+        );
+
+      scoreBlock.classList.remove(
+        "full",
+        "zero"
+      );
+
+      if (
+        selectedIndex === question.correct
+      ) {
+        totalScore++;
+
+        scoreBlock.classList.add(
+          "full"
+        );
+
+        scoreBlock.textContent =
+          "Бұл сұрақ бойынша: 1 / 1 балл";
+      } else {
+        scoreBlock.classList.add(
+          "zero"
+        );
+
+        scoreBlock.textContent =
+          "Бұл сұрақ бойынша: 0 / 1 балл";
+      }
+
+      questionBlock.classList.add(
+        "checked"
+      );
+
+      questionBlock
+        .querySelectorAll("input")
+        .forEach(input => {
+          input.disabled = true;
+        });
+    }
+  );
+
+  document.getElementById(
+    scoreId
+  ).textContent =
+    `${totalScore} / ${questions.length}`;
+
+  const resultCard =
+    document.getElementById(
+      resultId
+    );
+
+  resultCard.classList.add(
+    "show"
+  );
+
+  resultCard.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function showCriticalResults() {
+  showSectionResults(
+    criticalQuestions,
+    "criticalQuiz",
+    "criticalResult",
+    "criticalScore"
+  );
+}
+
+function showAnalyticalResults() {
+  showSectionResults(
+    analyticalQuestions,
+    "analyticalQuiz",
+    "analyticalResult",
+    "analyticalScore"
+  );
+}
+  function resetSection(
+  questions,
+  quizId,
+  resultId,
+  scoreId,
+  progressTextId,
+  progressBarId
+) {
+  const quiz =
+    document.getElementById(
+      quizId
+    );
+
+  quiz
+    .querySelectorAll("input")
+    .forEach(input => {
+      input.checked = false;
+      input.disabled = false;
+    });
+
+  quiz
+    .querySelectorAll(".option")
+    .forEach(option => {
+      option.classList.remove(
+        "correct",
+        "wrong"
+      );
+    });
+
+  quiz
+    .querySelectorAll(".question")
+    .forEach(questionBlock => {
+      questionBlock.classList.remove(
+        "checked"
+      );
+
+      const scoreBlock =
+        questionBlock.querySelector(
+          ".question-score"
+        );
+
+      scoreBlock.textContent = "";
+
+      scoreBlock.classList.remove(
+        "full",
+        "zero"
+      );
+    });
+
+  document.getElementById(
+    resultId
+  ).classList.remove(
+    "show"
+  );
+
+  document.getElementById(
+    scoreId
+  ).textContent =
+    `0 / ${questions.length}`;
+
+  document.getElementById(
+    progressTextId
+  ).textContent =
+    `0 / ${questions.length}`;
+
+  document.getElementById(
+    progressBarId
+  ).style.width =
+    "0%";
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+function resetCriticalTest() {
+  resetSection(
+    criticalQuestions,
+    "criticalQuiz",
+    "criticalResult",
+    "criticalScore",
+    "criticalProgressText",
+    "criticalProgressBar"
+  );
+}
+
+function resetAnalyticalTest() {
+  resetSection(
+    analyticalQuestions,
+    "analyticalQuiz",
+    "analyticalResult",
+    "analyticalScore",
+    "analyticalProgressText",
+    "analyticalProgressBar"
+  );
+}
+
+createAnalyticalSection();
+
+renderCriticalQuestions();
+
+renderAnalyticalQuestions();
+
+activateNavigation();
+
+updateCriticalProgress();
+
+updateAnalyticalProgress();
+
+</script>
+
+</div>
+</body>
+</html>
+  
+  
+  
+  
+  
