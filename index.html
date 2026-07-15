@@ -552,6 +552,109 @@ disabled
 </button>
 
 </div>
+
+<section
+id="criticalSection"
+class="test-section active"
+>
+
+<div class="section-header">
+
+<h2>
+Сыни ойлау
+</h2>
+
+<p>
+15 сұрақ • Әр дұрыс жауап – 1 балл
+</p>
+
+<div class="section-information">
+
+<span class="information-badge">
+15 сұрақ
+</span>
+
+<span class="information-badge">
+15 балл
+</span>
+
+</div>
+
+</div>
+
+<div class="progress-card">
+
+<div class="progress-information">
+
+<span>
+Орындалуы
+</span>
+
+<strong id="criticalProgressText">
+0 / 15
+</strong>
+
+</div>
+
+<div class="progress-line">
+<span id="criticalProgressBar"></span>
+</div>
+
+</div>
+
+<div
+id="criticalResult"
+class="result-card"
+>
+
+<h3>
+Сыни ойлау нәтижесі
+</h3>
+
+<div
+id="criticalScore"
+class="score"
+>
+0 / 15
+</div>
+
+</div>
+
+<div id="criticalQuiz"></div>
+
+<div class="actions">
+
+<button
+class="reset-button"
+onclick="resetCriticalTest()"
+type="button"
+>
+Қайта бастау
+</button>
+
+<button
+class="show-result-button"
+onclick="showCriticalResults()"
+type="button"
+>
+Нәтижені көрсету
+</button>
+
+</div>
+
+</section>
+
+<script>
+
+const letters = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E"
+];
+
+const criticalQuestions = [
   {
 number:1,
 
@@ -2087,7 +2190,7 @@ keyFact:
 }
 
 ];
-  const analyticalQuestions = [
+const analyticalQuestions = [
 
 {
 number:16,
